@@ -1,4 +1,4 @@
-
+import numpy as np
 
 def begin_game():
     """
@@ -33,6 +33,7 @@ class Board:
     """
     def __init__(self):
         self.size = 10  # Default size
+        self.board = []
     
     def get_size(self):
         """
@@ -56,8 +57,19 @@ Please enter a board size between 10-15./\
         self.size = temp_size
         print(self.size)
 
+    def build_board(self):
+        """
+        Builds the game board based on
+        selected size
+        """
+        
+        for x in range(int(self.size)):
+            self.board.append("-")
+            print(np.matrix(self.board))
+
 
 begin_game()
 
 board = Board()
 board.get_size()
+board.build_board()
