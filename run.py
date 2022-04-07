@@ -66,26 +66,38 @@ Please enter a board size between 5-9./\
             for x in range(int(self.size)):
                 board_row.append("-")
             self.board.append(board_row)
-        print(self.board)
     
     def construct_print_board(self):
         """
         Converts the bord 3d array into a printable string.
         It also adds number axis values
         """
-        board_str = ""
+        board_str = "" 
+        board_str_x_axis = ""
+        x_axis = "   "
+
+        #  x-axis construction
+        for i in range(int(self.size)):
+            x_axis += (f" {i +1} |")
+        board_str_x_axis += (x_axis + "\n")
+        #  Adds x axis string to print_board string
+        self.print_board += board_str_x_axis
+
+        #  y-axis and main board construction
         y_axis = 1
         for i in range(int(self.size)):
             row_str = ""
             row_str += f"{y_axis} | "
             for x in range(int(self.size)):
                 row_str += (self.board[i][x] + " | ")
-            print(row_str)
+
+            # Checks to see if board is finished
+            if y_axis == int(self.size):
+                board_str += (row_str + "\n")
+                self.print_board += board_str
+            else:
+                board_str += (row_str + "\n")
             y_axis += 1
-        if len(board_str) == self.size:  # Checks to see if board is finished
-            self.print_board = board_str
-        else:
-            board_str += (row_str + "\n")
 
 
 begin_game()
@@ -94,4 +106,5 @@ board = Board()
 board.get_size()
 board.build_board()
 board.construct_print_board()
-print(board.print_board)
+print("Here is your constructed board:")
+print(getattr(board, "print_board"))
