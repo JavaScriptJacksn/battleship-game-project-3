@@ -62,10 +62,22 @@ Please enter a board size between 10-15./\
         Builds the game board based on
         selected size
         """
-        
-        for x in range(int(self.size)):
-            self.board.append("-")
-            print(np.matrix(self.board))
+        for i in range (int(self.size)):
+            board_row = []
+            for x in range(int(self.size)):
+                board_row.append("-")
+            self.board.append(board_row)
+        print(self.board)
+    
+    def print_board(self):
+        board_str = ""
+        for i in range(int(self.size) - 1):
+            row_str = ""
+            for x in range(int(self.size)):
+                row_str += (self.board[i][x] + " | ")
+            print(row_str)
+        board_str += (row_str + "\n")
+        print(board_str)
 
 
 begin_game()
@@ -73,3 +85,4 @@ begin_game()
 board = Board()
 board.get_size()
 board.build_board()
+board.print_board()
