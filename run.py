@@ -1,5 +1,3 @@
-import numpy as np
-
 def begin_game():
     """
     Begins new game, prints beginning message and asks for user name input
@@ -32,8 +30,9 @@ class Board:
     Creates an instance of board
     """
     def __init__(self):
-        self.size = 10  # Default size
+        self.size = 5  # Default size
         self.board = []
+        self.print_board = ""
     
     def get_size(self):
         """
@@ -44,14 +43,14 @@ class Board:
 --------------------------------------------------------------------------------
 Boards sizes are use as the length and\n
 width of the board to make a square.\n
-Please enter a board size between 10-15./\
+Please enter a board size between 5-9./\
 """)
 
         temp_size = input("Please enter a board size:\n")
 
         # Validation of input
-        while temp_size not in ["10", "11", "12", "13", "14", "15"]:
-            print("Invalid board size, please enter a value between 10-15:")
+        while temp_size not in ["5", "6", "7", "8", "9"]:
+            print("Invalid board size, please enter a value between 5-9:")
             temp_size = input()
         
         self.size = temp_size
@@ -62,22 +61,31 @@ Please enter a board size between 10-15./\
         Builds the game board based on
         selected size
         """
-        for i in range (int(self.size)):
+        for i in range(int(self.size)):
             board_row = []
             for x in range(int(self.size)):
                 board_row.append("-")
             self.board.append(board_row)
         print(self.board)
     
-    def print_board(self):
+    def construct_print_board(self):
+        """
+        Converts the bord 3d array into a printable string.
+        It also adds number axis values
+        """
         board_str = ""
-        for i in range(int(self.size) - 1):
+        y_axis = 1
+        for i in range(int(self.size)):
             row_str = ""
+            row_str += f"{y_axis} | "
             for x in range(int(self.size)):
                 row_str += (self.board[i][x] + " | ")
             print(row_str)
-        board_str += (row_str + "\n")
-        print(board_str)
+            y_axis += 1
+        if len(board_str) == self.size:  # Checks to see if board is finished
+            self.print_board = board_str
+        else:
+            board_str += (row_str + "\n")
 
 
 begin_game()
@@ -85,4 +93,5 @@ begin_game()
 board = Board()
 board.get_size()
 board.build_board()
-board.print_board()
+board.construct_print_board()
+print(board.print_board)
