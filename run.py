@@ -52,7 +52,7 @@ Please enter a board size between 5-9./\
         while temp_size not in ["5", "6", "7", "8", "9"]:
             print("Invalid board size, please enter a value between 5-9:")
             temp_size = input()
-        
+    
         self.size = temp_size
         print(self.size)
 
@@ -66,24 +66,24 @@ Please enter a board size between 5-9./\
             for x in range(int(self.size)):
                 board_row.append("-")
             self.board.append(board_row)
-    
+
     def construct_print_board(self):
         """
         Converts the bord 3d array into a printable string.
         It also adds number axis values
         """
-        board_str = "" 
+        board_str = ""
         board_str_x_axis = ""
         x_axis = "   "
 
-        #  x-axis construction
+        # x-axis construction
         for i in range(int(self.size)):
             x_axis += (f" {i +1} |")
         board_str_x_axis += (x_axis + "\n")
-        #  Adds x axis string to print_board string
+        # Adds x axis string to print_board string
         self.print_board += board_str_x_axis
 
-        #  y-axis and main board construction
+        # y-axis and main board construction
         y_axis = 1
         for i in range(int(self.size)):
             row_str = ""
@@ -99,6 +99,39 @@ Please enter a board size between 5-9./\
                 board_str += (row_str + "\n")
             y_axis += 1
 
+    def place_ships(self):
+        """
+        Generates the ships for each board and returns an array
+        of each axis placements
+        """
+        number_of_ships = 5 if int(self.size) < 7 else 9
+        print(f"Your avalible ships are: {number_of_ships}")
+
+        user_ships_x = []
+        user_ships_y = []
+
+        for i in range(number_of_ships):
+
+            # Gets y-axis placement
+            print(f"Please enter the x coordinate of ship {i+1}\n")
+            x_axis_placement = input()
+            while x_axis_placement not in "123456789":
+                print(f"Please enter a value between 1-{self.size}")
+                x_axis_placement = input()
+
+            # Gets y-axis placement
+            print(f"Please enter the y coordinate of ship {i+1}\n")
+            y_axis_placement = input()
+            while y_axis_placement not in "123456789":
+                print(f"Please enter a value between 1-{self.size}")
+                y_axis_placement = input()
+
+            user_ships_x.append(int(x_axis_placement))
+            user_ships_y.append(int(y_axis_placement))
+            print(f"ship x axis values {user_ships_x}")
+            print(f"ship y axis values {user_ships_y}")
+
+        return user_ships_x, user_ships_y
 
 begin_game()
 
@@ -108,3 +141,4 @@ board.build_board()
 board.construct_print_board()
 print("Here is your constructed board:")
 print(getattr(board, "print_board"))
+user_x, user_y = board.place_ships()
