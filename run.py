@@ -133,8 +133,18 @@ Please enter a board size between 5-9./\
 
         return user_ships_x, user_ships_y
 
-begin_game()
+    def update_board(self, x_axis, y_axis):
+        """
+        Updates the board with the user ship placement
+        The print board must be re-constructed to
+        include new additions
+        """
+        for y_num, x_num in zip(y_axis, x_axis):
+            self.board[y_num-1][x_num-1] = "#"
 
+
+begin_game()
+ 
 board = Board()
 board.get_size()
 board.build_board()
@@ -142,3 +152,7 @@ board.construct_print_board()
 print("Here is your constructed board:")
 print(getattr(board, "print_board"))
 user_x, user_y = board.place_ships()
+board.update_board(user_x, user_y)
+board.construct_print_board()
+print("Here is your constructed board:")
+print(getattr(board, "print_board"))
