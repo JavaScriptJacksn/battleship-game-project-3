@@ -24,6 +24,16 @@ Good Luck.
 
     print(f"\nOperative {name}, your training begins.")
 
+    board = Board()
+    board.get_size()
+    board.build_board()
+    board.construct_print_board()
+    print("Here is your game board:")
+    print(getattr(board, "print_board"))
+    board.place_ships()
+    print("Here is your final board:")
+    print(getattr(board, "print_board"))
+
 
 class Board:
     """
@@ -33,7 +43,7 @@ class Board:
         self.size = 5  # Default size
         self.board = []
         self.print_board = ""
-    
+
     def get_size(self):
         """
         Requests user for size of board
@@ -52,7 +62,7 @@ Please enter a board size between 5-9./\
         while temp_size not in ["5", "6", "7", "8", "9"]:
             print("Invalid board size, please enter a value between 5-9:")
             temp_size = input()
-    
+
         self.size = temp_size
         print(self.size)
 
@@ -71,7 +81,10 @@ Please enter a board size between 5-9./\
         """
         Converts the bord 3d array into a printable string.
         It also adds number axis values
+        It begins by setting the board to an empty string as
+        to not add boards together
         """
+        self.print_board = ""
         board_str = ""
         board_str_x_axis = ""
         x_axis = "   "
@@ -147,32 +160,24 @@ Please enter a board size between 5-9./\
 
             user_ships_x.append(int(x_axis_placement))
             user_ships_y.append(int(y_axis_placement))
-            print(f"ship x axis values {user_ships_x}")
-            print(f"ship y axis values {user_ships_y}")
-            self.update_board(x_axis_placement, y_axis_placement)
 
-        return user_ships_x, user_ships_y
+            self.update_board(x_axis_placement, y_axis_placement, "#")
+            self.construct_print_board()
+            print("----------------------------------------------" +
+                  "----------------------------------")
+            print("Ship placed.")
+            print("----------------------------------------------" +
+                  "----------------------------------")
+            print(self.print_board)
 
-    def update_board(self, x_axis, y_axis):
+    def update_board(self, x_axis, y_axis, icon):
         """
         Updates the board with the user ship placement
         The print board must be re-constructed to
         include new additions
         """
         for y_num, x_num in zip(y_axis, x_axis):
-            self.board[int(y_num)-1][int(x_num)-1] = "#"
+            self.board[int(y_num)-1][int(x_num)-1] = icon
 
 
 begin_game()
- 
-board = Board()
-board.get_size()
-board.build_board()
-board.construct_print_board()
-print("Here is your constructed board:")
-print(getattr(board, "print_board"))
-user_x, user_y = board.place_ships()
-board.update_board(user_x, user_y)
-board.construct_print_board()
-print("Here is your constructed board:")
-print(getattr(board, "print_board"))
