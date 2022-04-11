@@ -1,3 +1,5 @@
+import random
+
 def begin_game():
     """
     Begins new game, prints beginning message and asks for user name input
@@ -24,15 +26,22 @@ Good Luck.
 
     print(f"\nOperative {name}, your training begins.")
 
-    board = Board()
-    board.get_size()
-    board.build_board()
-    board.construct_print_board()
-    print("Here is your game board:")
-    print(getattr(board, "print_board"))
-    board.place_ships()
-    print("Here is your final board:")
-    print(getattr(board, "print_board"))
+    player_board = Board()
+    player_board.get_size()
+    player_board.build_board()
+    player_board.construct_print_board()
+    print("Game board:")
+    print(getattr(player_board, "print_board"))
+    player_board.place_ships()
+    print("Final board:")
+    print(getattr(player_board, "print_board"))
+
+    computer_board = Board()
+    computer_board.build_board()
+    computer_board.place_random_ships()
+    computer_board.construct_print_board()
+    print("Enemy board:")
+    print(getattr(computer_board, "print_board"))
 
 
 class Board:
@@ -169,6 +178,20 @@ Please enter a board size between 5-9./\
             print("----------------------------------------------" +
                   "----------------------------------")
             print(self.print_board)
+
+    def place_random_ships(self):
+        """
+        Randomly places ships, only for use for
+        the computer board
+        """
+        for i in range(self.size):
+            rand_x = random.randint(1, int(self.size)-1)
+            rand_y = random.randint(1, int(self.size)-1)
+            while self.check_for_ship(rand_y, rand_x) == "#":
+                rand_x = random.randint(1, int(self.size)-1)
+                rand_y = random.randint(1, int(self.size)-1)
+            # Change to hold in list to not display
+            self.board[rand_y][rand_x] = "#"
 
     def update_board(self, x_axis, y_axis, icon):
         """
