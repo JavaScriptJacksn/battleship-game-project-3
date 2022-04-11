@@ -99,6 +99,15 @@ Please enter a board size between 5-9./\
                 board_str += (row_str + "\n")
             y_axis += 1
 
+    def check_for_ship(self, y_value, x_value):
+        """
+        Checks to see if ship is at coordinates
+        """
+        if self.board[int(y_value)][int(x_value)] == "#":
+            return True
+
+        return False
+
     def place_ships(self):
         """
         Generates the ships for each board and returns an array
@@ -112,24 +121,35 @@ Please enter a board size between 5-9./\
 
         for i in range(number_of_ships):
 
-            # Gets y-axis placement
-            print(f"Please enter the x coordinate of ship {i+1}\n")
-            x_axis_placement = input()
-            while x_axis_placement not in "123456789":
-                print(f"Please enter a value between 1-{self.size}")
-                x_axis_placement = input()
+            used_location = True
+            while used_location is True:
 
-            # Gets y-axis placement
-            print(f"Please enter the y coordinate of ship {i+1}\n")
-            y_axis_placement = input()
-            while y_axis_placement not in "123456789":
-                print(f"Please enter a value between 1-{self.size}")
+                # Gets y-axis placement
+                print(f"Please enter the x coordinate of ship {i+1}\n")
+                x_axis_placement = input()
+                while x_axis_placement not in "123456789":
+                    print(f"Please enter a value between 1-{self.size}")
+                    x_axis_placement = input()
+
+                # Gets y-axis placement
+                print(f"Please enter the y coordinate of ship {i+1}\n")
                 y_axis_placement = input()
+                while y_axis_placement not in "123456789":
+                    print(f"Please enter a value between 1-{self.size}")
+                    y_axis_placement = input()
+
+                # Validates chosen location which ends/starts the outer loop
+                used_location = (self.check_for_ship(int(y_axis_placement)-1,
+                                                     int(x_axis_placement)-1))
+
+                if used_location is True:
+                    print("Ship cannot be in the same place as another")
 
             user_ships_x.append(int(x_axis_placement))
             user_ships_y.append(int(y_axis_placement))
             print(f"ship x axis values {user_ships_x}")
             print(f"ship y axis values {user_ships_y}")
+            self.update_board(x_axis_placement, y_axis_placement)
 
         return user_ships_x, user_ships_y
 
@@ -140,7 +160,7 @@ Please enter a board size between 5-9./\
         include new additions
         """
         for y_num, x_num in zip(y_axis, x_axis):
-            self.board[y_num-1][x_num-1] = "#"
+            self.board[int(y_num)-1][int(x_num)-1] = "#"
 
 
 begin_game()
