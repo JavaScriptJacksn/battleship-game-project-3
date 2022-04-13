@@ -60,6 +60,13 @@ Good Luck.
 It's a draw! \n Training ceased.\n at least you took them down with you...
 """)
 
+    print("Do you wish to play again?\n")
+    play_again = input("Y / N : \n")
+    while play_again not in "YyNn":
+        play_again = input("Please enter a Y or N: \n")
+    if play_again in "Yy":
+        print("Battleship training simuation finished.")
+
 
 def new_round(player_board, computer_board, board_size):
     """
@@ -81,8 +88,10 @@ def new_round(player_board, computer_board, board_size):
     print(f"Your enemy has {computer_board.number_of_ships} ships left.")
 
     # Computer turn
-    computer_guess_x, computer_guess_y = computer_guess(player_board,
+    computer_guess_x, computer_guess_y = computer_guess(computer_board,
                                                         board_size)
+    print("computer guesses:")
+    print([computer_guess_x, computer_guess_y])
     hit = player_board.check_for_ship(computer_guess_x, computer_guess_y)
     if hit is True:
         player_board.update_board(computer_guess_x, computer_guess_y, "X")
@@ -163,15 +172,15 @@ def get_guess(board, board_size):
         if used_position is True:
             print("You cannot attack the same location twice!")
 
-    return (str(x_guess), str(y_guess))
+    return str(x_guess), str(y_guess)
 
 
 def computer_guess(board, board_size):
     """
     Returns random y and x axis values
     """
-    x_value = 0
-    y_value = 0
+    x_value = random.randint(1, board_size)
+    y_value = random.randint(1, board_size)
     # Passed player board to check if position already guessed
     while board.check_used_position(x_value, y_value):
         x_value = random.randint(1, board_size)
@@ -188,8 +197,7 @@ class Board():
         self.number_of_ships = 5  # Default number
         self.board = []
         self.print_board = ""
-        self.ship_locations_x = []
-        self.ship_locations_y = []
+        self.ship_locations = []
 
     def build_board(self):
         """
@@ -243,9 +251,8 @@ class Board():
         separate from check position function as the computer board
         does not store ships on the board itself
         """
-        for x, y in zip(self.ship_locations_x, self.ship_locations_y):
-            if (int(x_value) == x and int(y_value) == y):
-                return True
+        if [str(x_value), str(y_value)] in self.ship_locations:
+            return True
 
         return False
 
@@ -257,9 +264,6 @@ class Board():
         self.number_of_ships = 5 if int(self.size) < 7 else 9
         print(f"Your avalible ships are: {self.number_of_ships}")
 
-        user_ships_x = []
-        user_ships_y = []
-
         for i in range(self.number_of_ships):
 
             used_location = True
@@ -268,14 +272,16 @@ class Board():
                 # Gets y-axis placement
                 print(f"Please enter the x coordinate of ship {i+1}\n")
                 x_axis_placement = input()
-                while x_axis_placement not in "123456789":
+                # Validates x input to be between 1-size maximum
+                while int(x_axis_placement) not in range(1, int(self.size)+1):
                     print(f"Please enter a value between 1-{self.size}")
                     x_axis_placement = input()
 
                 # Gets y-axis placement
                 print(f"Please enter the y coordinate of ship {i+1}\n")
                 y_axis_placement = input()
-                while y_axis_placement not in "123456789":
+                # Validates y input to be between 1-size maximum
+                while int(y_axis_placement) not in range(1, int(self.size)+1):
                     print(f"Please enter a value between 1-{self.size}")
                     y_axis_placement = input()
 
@@ -286,10 +292,7 @@ class Board():
                 if used_location is True:
                     print("Ship cannot be in the same place as another")
 
-            user_ships_x.append(int(x_axis_placement))
-            user_ships_y.append(int(y_axis_placement))
-            self.ship_locations_x = user_ships_x
-            self.ship_locations_y = user_ships_y
+            self.ship_locations.append([x_axis_placement, y_axis_placement])
 
             self.update_board(x_axis_placement, y_axis_placement, "#")
             self.construct_print_board()
@@ -315,10 +318,8 @@ class Board():
                 rand_x = random.randint(1, int(self.size))
                 rand_y = random.randint(1, int(self.size))
                 used_position = self.check_for_ship(rand_y, rand_x)
-            self.ship_locations_x.append([rand_x, rand_y])
-            self.ship_locations_y.append([rand_x, rand_y])
-        print(self.ship_locations_x)
-        print(self.ship_locations_y)
+            self.ship_locations.append([str(rand_x), str(rand_y)])
+        print(self.ship_locations)
 
     def update_board(self, x_axis, y_axis, icon):
         """
@@ -326,7 +327,6 @@ class Board():
         The print board must be re-constructed to
         include new additions
         """
-        # for y_num, x_num in zip(y_axis, x_axis):
         self.board[int(y_axis)-1][int(x_axis)-1] = icon
 
     def check_used_position(self, x_axis, y_axis):
