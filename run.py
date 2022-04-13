@@ -44,7 +44,7 @@ Good Luck.
     # Main gameplay loop until victory
     while (player_board.number_of_ships != 0 and
            computer_board.number_of_ships != 0):
-        new_round(player_board, computer_board)
+        new_round(player_board, computer_board, game_board_size)
 
     # Checks for winner
     if (player_board.number_of_ships == 0 and
@@ -61,23 +61,37 @@ It's a draw! \n Training ceased.\n at least you took them down with you...
 """)
 
 
-def new_round(player_board, computer_board):
+def new_round(player_board, computer_board, board_size):
     """
     Starts a new round, checking for hit or miss
     and updates the board giving feedback to the user
     """
     print_round(player_board, computer_board)
-    user_guess_x, user_guess_y = get_guess()
+    user_guess_x, user_guess_y = get_guess(computer_board, board_size)
     hit = computer_board.check_for_ship(user_guess_x, user_guess_y)
+
+    # Player  turn
     if hit is True:
         computer_board.update_board(user_guess_x, user_guess_y, "X")
         print("Hit!")
         computer_board.number_of_ships -= 1
-        print(f"Your enemy has {computer_board.number_of_ships} ships left.")
     else:
         print("Miss!")
         computer_board.update_board(user_guess_x, user_guess_y, "O")
-        print(f"Your enemy has {computer_board.number_of_ships} ships left.")
+    print(f"Your enemy has {computer_board.number_of_ships} ships left.")
+
+    # Computer turn
+    computer_guess_x, computer_guess_y = computer_guess(player_board,
+                                                        board_size)
+    hit = player_board.check_for_ship(computer_guess_x, computer_guess_y)
+    if hit is True:
+        player_board.update_board(computer_guess_x, computer_guess_y, "X")
+        print("The enemy hit your ship!")
+        player_board.number_of_ships -= 1
+    else:
+        print("The enemy missed your ship!")
+        player_board.update_board(computer_guess_x, computer_guess_y, "O")
+    print(f"You have {player_board.number_of_ships} ships left.")
     player_board.construct_print_board()
     computer_board.construct_print_board()
 
@@ -95,7 +109,7 @@ Enemy board:
 
     print("""
 --------------------------------------------------------------------------------
-Your final board:
+Your board:
 --------------------------------------------------------------------------------
     """)
     print(getattr(player_board, "print_board"))
@@ -123,15 +137,46 @@ Please enter a board size between 5-9./\
     return size
 
 
-def get_guess():
+def get_guess(board, board_size):
     """
     Gets the coordinates of users guess
     """
     print("Enter coordinates to attack.")
-    x_guess = input("X coordinate of guess:")
-    y_guess = input("Y coordinate of guess:")
+    x_guess = "0"
+    y_guess = "0"
 
-    return (x_guess, y_guess)
+    used_position = True
+    # Passed computer board to check if position already guessed
+    while used_position is True:
+        # X guess
+        x_guess = int(input("X coordinate of guess:"))
+        while x_guess not in range(1, board_size+1):
+            print(f"Please enter a value between 1 - {board_size}")
+            x_guess = int(input("X coordinate of guess:"))
+        y_guess = int(input("Y coordinate of guess:"))
+        # Y guess
+        while y_guess not in range(1, board_size+1):
+            print(f"Please enter a value between 1 - {board_size}")
+            y_guess = int(input("Y coordinate of guess:"))
+        used_position = board.check_used_position(x_guess, y_guess)
+
+        if used_position is True:
+            print("You cannot attack the same location twice!")
+
+    return (str(x_guess), str(y_guess))
+
+
+def computer_guess(board, board_size):
+    """
+    Returns random y and x axis values
+    """
+    x_value = 0
+    y_value = 0
+    # Passed player board to check if position already guessed
+    while board.check_used_position(x_value, y_value):
+        x_value = random.randint(1, board_size)
+        y_value = random.randint(1, board_size)
+    return x_value, y_value
 
 
 class Board():
@@ -194,7 +239,9 @@ class Board():
 
     def check_for_ship(self, x_value, y_value):
         """
-        Checks to see if ship is at coordinates
+        Checks to see if ship is at coordinates,
+        separate from check position function as the computer board
+        does not store ships on the board itself
         """
         for x, y in zip(self.ship_locations_x, self.ship_locations_y):
             if (int(x_value) == x and int(y_value) == y):
@@ -263,11 +310,13 @@ class Board():
         for i in range(self.size):
             rand_x = random.randint(1, int(self.size))
             rand_y = random.randint(1, int(self.size))
-            while self.check_for_ship(rand_y, rand_x) is True:
+            used_position = True
+            while used_position is True:
                 rand_x = random.randint(1, int(self.size))
                 rand_y = random.randint(1, int(self.size))
-            self.ship_locations_x.append(rand_x)
-            self.ship_locations_y.append(rand_y)
+                used_position = self.check_for_ship(rand_y, rand_x)
+            self.ship_locations_x.append([rand_x, rand_y])
+            self.ship_locations_y.append([rand_x, rand_y])
         print(self.ship_locations_x)
         print(self.ship_locations_y)
 
@@ -277,8 +326,18 @@ class Board():
         The print board must be re-constructed to
         include new additions
         """
-        for y_num, x_num in zip(y_axis, x_axis):
-            self.board[int(y_num)-1][int(x_num)-1] = icon
+        # for y_num, x_num in zip(y_axis, x_axis):
+        self.board[int(y_axis)-1][int(x_axis)-1] = icon
+
+    def check_used_position(self, x_axis, y_axis):
+        """
+        Function to check if the actual position on the board
+        data structure is occupied by X or O
+        """
+        if self.board[int(y_axis)-1][int(x_axis)-1] != ("-" or "#"):
+            return True
+        else:
+            return False
 
 
 begin_game()
