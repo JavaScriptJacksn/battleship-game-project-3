@@ -32,7 +32,10 @@ Good Luck.
     player_board = Board(game_board_size)
     player_board.build_board()
     player_board.construct_print_board()
-    print("Game board:")
+    print("""
+--------------------------------------------------------------------------------\n
+""")
+    print("Your board:")
     print(getattr(player_board, "print_board"))
     player_board.place_ships()
 
@@ -85,25 +88,31 @@ def new_round(player_board, computer_board, board_size):
     # Player  turn
     if hit is True:
         computer_board.update_board(user_guess_x, user_guess_y, "X")
-        print("Hit!")
+        print("""
+--------------------------------------------------------------------------------
+Hit!:
+--------------------------------------------------------------------------------
+    """)
         computer_board.number_of_ships -= 1
     else:
-        print("Miss!")
+        print("""
+--------------------------------------------------------------------------------
+Miss!
+--------------------------------------------------------------------------------
+    """)
         computer_board.update_board(user_guess_x, user_guess_y, "O")
-    print(f"Your enemy has {computer_board.number_of_ships} ships left.")
+    print(f"Your enemy has {computer_board.number_of_ships} ships left.\n")
 
     # Computer turn
     computer_guess_x, computer_guess_y = computer_guess(computer_board,
                                                         board_size)
-    print("computer guesses:")
-    print([computer_guess_x, computer_guess_y])
     hit = player_board.check_for_ship(computer_guess_x, computer_guess_y)
     if hit is True:
         player_board.update_board(computer_guess_x, computer_guess_y, "X")
-        print("The enemy hit your ship!")
+        print("The enemy hit your ship!\n")
         player_board.number_of_ships -= 1
     else:
-        print("The enemy missed your ship!")
+        print("The enemy missed your ship!\n")
         player_board.update_board(computer_guess_x, computer_guess_y, "O")
     print(f"You have {player_board.number_of_ships} ships left.")
     player_board.construct_print_board()
@@ -136,8 +145,11 @@ def get_size():
 
     print("""
 --------------------------------------------------------------------------------
-Boards sizes are use as the length and\n
-width of the board to make a square.\n
+Please enter a Board size between 5-9.
+
+Note: Boards sizes are use as the length and\n
+width of the board to make a square.
+--------------------------------------------------------------------------------\n
 """)
     size = 0
     while size not in [5, 6, 7, 8, 9]:
@@ -146,7 +158,6 @@ width of the board to make a square.\n
             size = int(input())
         except ValueError:
             print("Board size must be a number.\n")
-    print(size)
     return size
 
 
@@ -167,7 +178,7 @@ def get_guess(board, board_size):
         while x_guess not in range(1, board_size+1):
             print(f"Please enter a value between 1 - {board_size}\n")
             try:
-                x_guess = int(input("X coordinate of guess:"))
+                x_guess = int(input("X coordinate of guess:\n"))
             except ValueError:
                 print("Please enter a number.")
 
@@ -175,7 +186,7 @@ def get_guess(board, board_size):
         while y_guess not in range(1, board_size+1):
             print(f"Please enter a value between 1 - {board_size}")
             try:
-                y_guess = int(input("Y coordinate of guess:"))
+                y_guess = int(input("Y coordinate of guess:\n"))
             except ValueError:
                 print("Please enter a number.")
 
@@ -315,11 +326,12 @@ class Board():
 
             self.update_board(x_axis_placement, y_axis_placement, "#")
             self.construct_print_board()
+            print("\n\n\n\n\n")
             print("----------------------------------------------" +
                   "----------------------------------")
-            print("Ship placed.")
+            print("Ship placed. Your current board:")
             print("----------------------------------------------" +
-                  "----------------------------------")
+                  "----------------------------------\n")
             print(self.print_board)
 
     def place_random_ships(self):
@@ -336,7 +348,6 @@ class Board():
                 rand_y = random.randint(1, int(self.size))
                 used_position = self.check_for_ship(rand_x, rand_y)
             self.ship_locations.append([str(rand_x), str(rand_y)])
-        print(self.ship_locations)
 
     def update_board(self, x_axis, y_axis, icon):
         """
