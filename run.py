@@ -61,11 +61,16 @@ It's a draw! \n Training ceased.\n at least you took them down with you...
 """)
 
     print("Do you wish to play again?\n")
-    play_again = input("Y / N : \n")
+    play_again = " "
     while play_again not in "YyNn":
-        play_again = input("Please enter a Y or N: \n")
-    if play_again in "Yy":
+        try:
+            play_again = input("Please enter a Y or N: \n")
+        except ValueError:
+            print("Please enter a Y or N: \n")
+    if play_again in "Nn":
         print("Battleship training simuation finished.")
+    else:
+        begin_game()
 
 
 def new_round(player_board, computer_board, board_size):
@@ -133,15 +138,14 @@ def get_size():
 --------------------------------------------------------------------------------
 Boards sizes are use as the length and\n
 width of the board to make a square.\n
-Please enter a board size between 5-9./\
 """)
-
-    size = int(input("Please enter a board size:\n"))
-
-    # Validation of input
+    size = 0
     while size not in [5, 6, 7, 8, 9]:
-        print("Invalid board size, please enter a value between 5-9:")
-        size = input()
+        print("Please enter a value between 5-9:")
+        try:
+            size = int(input())
+        except ValueError:
+            print("Board size must be a number.\n")
     print(size)
     return size
 
@@ -157,16 +161,24 @@ def get_guess(board, board_size):
     used_position = True
     # Passed computer board to check if position already guessed
     while used_position is True:
+
         # X guess
-        x_guess = int(input("X coordinate of guess:"))
+        x_guess = 0
         while x_guess not in range(1, board_size+1):
-            print(f"Please enter a value between 1 - {board_size}")
-            x_guess = int(input("X coordinate of guess:"))
-        y_guess = int(input("Y coordinate of guess:"))
+            print(f"Please enter a value between 1 - {board_size}\n")
+            try:
+                x_guess = int(input("X coordinate of guess:"))
+            except ValueError:
+                print("Please enter a number.")
+
         # Y guess
         while y_guess not in range(1, board_size+1):
             print(f"Please enter a value between 1 - {board_size}")
-            y_guess = int(input("Y coordinate of guess:"))
+            try:
+                y_guess = int(input("Y coordinate of guess:"))
+            except ValueError:
+                print("Please enter a number.")
+
         used_position = board.check_used_position(x_guess, y_guess)
 
         if used_position is True:
@@ -253,7 +265,6 @@ class Board():
         """
         if [str(x_value), str(y_value)] in self.ship_locations:
             return True
-
         return False
 
     def place_ships(self):
@@ -269,21 +280,29 @@ class Board():
             used_location = True
             while used_location is True:
 
-                # Gets y-axis placement
-                print(f"Please enter the x coordinate of ship {i+1}\n")
-                x_axis_placement = input()
-                # Validates x input to be between 1-size maximum
-                while int(x_axis_placement) not in range(1, int(self.size)+1):
-                    print(f"Please enter a value between 1-{self.size}")
-                    x_axis_placement = input()
+                x_axis_placement = "0"
+                y_axis_placement = "0"
 
-                # Gets y-axis placement
-                print(f"Please enter the y coordinate of ship {i+1}\n")
-                y_axis_placement = input()
-                # Validates y input to be between 1-size maximum
+                # Validates x input to be between 1-board size
+                while int(x_axis_placement) not in range(1, int(self.size)+1):
+                    try:
+                        # Gets x-axis placement
+                        # Uses str, int to prompt exception
+                        print(f"Please enter the x coordinate of ship {i+1}\n")
+                        x_axis_placement = str(int(input()))
+                    except ValueError:
+                        print(f"Please enter a value between 1-{self.size}")
+
+                # Validates y input to be between 1-board size
                 while int(y_axis_placement) not in range(1, int(self.size)+1):
-                    print(f"Please enter a value between 1-{self.size}")
-                    y_axis_placement = input()
+                    try:
+                        # Gets y-axis placement
+                        # Uses str, int to prompt exception
+                        print(f"Please enter the y coordinate of ship {i+1}\n")
+                        y_axis_placement = str(int(input()))
+                    except ValueError:
+                        print(f"Please enter a value between 1-{self.size}")
+                # Validates y input to be between 1-board size
 
                 # Validates chosen location which ends/starts the outer loop
                 used_location = (self.check_for_ship(int(x_axis_placement),
@@ -311,13 +330,11 @@ class Board():
         indexing in update board function minuses 1
         """
         for i in range(self.size):
-            rand_x = random.randint(1, int(self.size))
-            rand_y = random.randint(1, int(self.size))
             used_position = True
             while used_position is True:
                 rand_x = random.randint(1, int(self.size))
                 rand_y = random.randint(1, int(self.size))
-                used_position = self.check_for_ship(rand_y, rand_x)
+                used_position = self.check_for_ship(rand_x, rand_y)
             self.ship_locations.append([str(rand_x), str(rand_y)])
         print(self.ship_locations)
 
