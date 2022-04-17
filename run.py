@@ -66,10 +66,7 @@ It's a draw! \n Training ceased.\n at least you took them down with you...
     print("Do you wish to play again?\n")
     play_again = " "
     while play_again not in "YyNn":
-        try:
-            play_again = input("Please enter a Y or N: \n")
-        except ValueError:
-            print("Please enter a Y or N: \n")
+        play_again = input("Please enter a Y or N: \n")
     if play_again in "Nn":
         print("Battleship training simuation finished.")
     else:
@@ -81,6 +78,16 @@ def new_round(player_board, computer_board, board_size):
     Starts a new round, checking for hit or miss
     and updates the board giving feedback to the user
     """
+    print("Do you wish to continue?\n")
+    continue_round = " "
+    while continue_round not in "YyNn":
+        continue_round = input("Please enter a Y or N: \n")
+        if continue_round in "Nn":
+            print("Battleship training simuation finished.")
+            exit()
+        else:
+            print("\n\n\n\n\n")
+
     print_round(player_board, computer_board)
     user_guess_x, user_guess_y = get_guess(computer_board, board_size)
     hit = computer_board.check_for_ship(user_guess_x, user_guess_y)
@@ -88,18 +95,14 @@ def new_round(player_board, computer_board, board_size):
     # Player  turn
     if hit is True:
         computer_board.update_board(user_guess_x, user_guess_y, "X")
-        print("""
---------------------------------------------------------------------------------
-Hit!:
---------------------------------------------------------------------------------
-    """)
+        print("---------------------------------" +
+              "-----------------------------------------------" + "Hit!:")
         computer_board.number_of_ships -= 1
     else:
         print("""
 --------------------------------------------------------------------------------
 Miss!
---------------------------------------------------------------------------------
-    """)
+""")
         computer_board.update_board(user_guess_x, user_guess_y, "O")
     print(f"Your enemy has {computer_board.number_of_ships} ships left.\n")
 
@@ -109,12 +112,12 @@ Miss!
     hit = player_board.check_for_ship(computer_guess_x, computer_guess_y)
     if hit is True:
         player_board.update_board(computer_guess_x, computer_guess_y, "X")
-        print("The enemy hit your ship!\n")
+        print("The enemy hit your ship!")
         player_board.number_of_ships -= 1
     else:
-        print("The enemy missed your ship!\n")
+        print("The enemy missed your ship!")
         player_board.update_board(computer_guess_x, computer_guess_y, "O")
-    print(f"You have {player_board.number_of_ships} ships left.")
+    print(f"You have {player_board.number_of_ships} ships left.\n")
     player_board.construct_print_board()
     computer_board.construct_print_board()
 
@@ -126,14 +129,12 @@ def print_round(player_board, computer_board):
     print("""
 --------------------------------------------------------------------------------
 Enemy board:
---------------------------------------------------------------------------------
     """)
     print(getattr(computer_board, "print_board"))
 
     print("""
 --------------------------------------------------------------------------------
 Your board:
---------------------------------------------------------------------------------
     """)
     print(getattr(player_board, "print_board"))
 
@@ -147,8 +148,10 @@ def get_size():
 --------------------------------------------------------------------------------
 Please enter a Board size between 5-9.
 
-Note: Boards sizes are use as the length and\n
+Note: Boards sizes are used as the length and\n
 width of the board to make a square.
+Games with larger board sizes have more ships.
+These larger size games will take longer to finish
 --------------------------------------------------------------------------------\n
 """)
     size = 0
@@ -176,7 +179,7 @@ def get_guess(board, board_size):
         # X guess
         x_guess = 0
         while x_guess not in range(1, board_size+1):
-            print(f"Please enter a value between 1 - {board_size}\n")
+            print(f"Please enter a value between 1 - {board_size}")
             try:
                 x_guess = int(input("X coordinate of guess:\n"))
             except ValueError:
@@ -193,7 +196,7 @@ def get_guess(board, board_size):
         used_position = board.check_used_position(x_guess, y_guess)
 
         if used_position is True:
-            print("You cannot attack the same location twice!")
+            print("\nYou cannot attack the same location twice!")
 
     return str(x_guess), str(y_guess)
 
@@ -329,9 +332,7 @@ class Board():
             print("\n\n\n\n\n")
             print("----------------------------------------------" +
                   "----------------------------------")
-            print("Ship placed. Your current board:")
-            print("----------------------------------------------" +
-                  "----------------------------------\n")
+            print("Ship placed. Your current board:\n")
             print(self.print_board)
 
     def place_random_ships(self):
