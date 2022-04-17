@@ -19,6 +19,8 @@ As you know, they guard a hidden treasure… The Lost City of Atlantis.\n
 It is your mission to practise and perfect tactical ship placement\n
 and offensive manuevers in this cutting-edge simulation.\n
 Our livelyhoods rest on your shoulders.\n
+Note: Games last until the final ship is hit, game length/difficulty
+scales with the size of board.
 Good Luck.
 --------------------------------------------------------------------------------
 """)
