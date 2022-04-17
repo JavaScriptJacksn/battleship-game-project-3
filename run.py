@@ -78,6 +78,8 @@ def new_round(player_board, computer_board, board_size):
     Starts a new round, checking for hit or miss
     and updates the board giving feedback to the user
     """
+    print("----------------------------------------------" +
+          "----------------------------------")
     print("Do you wish to continue?\n")
     continue_round = " "
     while continue_round not in "YyNn":
@@ -96,15 +98,15 @@ def new_round(player_board, computer_board, board_size):
     if hit is True:
         computer_board.update_board(user_guess_x, user_guess_y, "X")
         print("---------------------------------" +
-              "-----------------------------------------------" + "Hit!:")
+              "-----------------------------------------------")
+        print("Hit!")
         computer_board.number_of_ships -= 1
     else:
-        print("""
---------------------------------------------------------------------------------
-Miss!
-""")
+        print("---------------------------------" +
+              "-----------------------------------------------")
+        print("Miss!")
         computer_board.update_board(user_guess_x, user_guess_y, "O")
-    print(f"Your enemy has {computer_board.number_of_ships} ships left.\n")
+    print(f"Your enemy has {computer_board.number_of_ships} ships left.")
 
     # Computer turn
     computer_guess_x, computer_guess_y = computer_guess(computer_board,
@@ -126,17 +128,12 @@ def print_round(player_board, computer_board):
     """
     Prints each round boards
     """
-    print("""
---------------------------------------------------------------------------------
-Enemy board:
-    """)
-    print(getattr(computer_board, "print_board"))
+    print("\n\n\n\n\n")
+    print("----------------------------------------------" +
+          "----------------------------------")
+    print("Enemy board:\n" + (getattr(computer_board, "print_board")))
 
-    print("""
---------------------------------------------------------------------------------
-Your board:
-    """)
-    print(getattr(player_board, "print_board"))
+    print("Your board:\n" + (getattr(player_board, "print_board")))
 
 
 def get_size():
