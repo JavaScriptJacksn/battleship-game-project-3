@@ -6,15 +6,14 @@ def begin_game():
     Begins new game, prints beginning message and asks for user name input
     """
 
-    name = input("To begin, enter your operative ID (name):\n")
-    print(f"""
+    print("""
 --------------------------------------------------------------------------------\n
 TACTICAL SIMULATION TRAINER\n
 TOP SECRET\n
 --------------------------------------------------------------------------------\n
-Welcome, operative{name}.\n
-Our great organisation is under a great threat,\n
-with enemy ships approaching our\n
+Welcome, operative.\n
+Our great organisation is under a great threat,
+with enemy ships approaching our
 vessels positioned in the pacific ocean.\n
 As you know, they guard a hidden treasure… The Lost City of Atlantis.\n
 It is your mission to practise and perfect tactical ship placement
@@ -25,7 +24,7 @@ scales with the size of board.\n
 Good Luck.
 --------------------------------------------------------------------------------
 """)
-
+    name = input("To begin, enter your operative ID (name):\n")
     print(f"\nOperative {name}, your training begins.")
 
     # Initial setup of boards and ships
@@ -53,11 +52,11 @@ Good Luck.
     # Checks for winner
     if (player_board.number_of_ships == 0 and
        computer_board.number_of_ships != 0):
-        print("You Lost!\n Training ceased.")
+        print("You Lost!\nTraining ceased.")
 
     elif (player_board.number_of_ships != 0 and
           computer_board.number_of_ships == 0):
-        print(f"You Won!\n Training ceased.\n Good work operative {name}")
+        print(f"You Won!\nTraining ceased.\nGood work operative {name}")
 
     else:
         print("""
