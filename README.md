@@ -79,8 +79,8 @@ I have manually tested this project using the follwing methods:
     - Fork or clone this repository
     - Create a new Heroku app
     - Set the buildpacks to Python and NodeJS in that order.
-    - Link the Heroku app to the repository
-      - I did this from my local terminal using git push heroku main as their was an issue with Heroku/Github linking at that time
-    - Click 'Deploy'
+    - Link the Heroku app to the repository by entering my credentials into my local workspace terminal
+    - I then used git push heroku main to deploy my code
+    - I used this method as their was an issue with Heroku/Github linking at that time
 ## Credits
 - Code Institue for the deployment terminal.
