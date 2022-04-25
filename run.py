@@ -27,22 +27,7 @@ Good Luck.
     name = input("To begin, enter your operative ID (name):\n")
     print(f"\nOperative {name}, your training begins.")
 
-    # Initial setup of boards and ships
-    game_board_size = get_size()
-    player_board = Board(game_board_size)
-    player_board.build_board()
-    player_board.construct_print_board()
-    print("""
---------------------------------------------------------------------------------\n
-""")
-    print("Your board:")
-    print(getattr(player_board, "print_board"))
-    player_board.place_ships()
-
-    computer_board = Board(game_board_size)
-    computer_board.build_board()
-    computer_board.place_random_ships()
-    computer_board.construct_print_board()
+    player_board, computer_board, game_board_size = init_setup()
 
     # Main gameplay loop until victory
     while (player_board.number_of_ships != 0 and
@@ -71,6 +56,28 @@ It's a draw! \n Training ceased.\n at least you took them down with you...
         print("Battleship training simuation finished.")
     else:
         begin_game()
+
+
+def init_setup():
+    """
+    Initial setup of boards and ships
+    """
+    game_board_size = get_size()
+    player_board = Board(game_board_size)
+    player_board.build_board()
+    player_board.construct_print_board()
+    print("""
+--------------------------------------------------------------------------------\n
+""")
+    print("Your board:")
+    print(getattr(player_board, "print_board"))
+    player_board.place_ships()
+
+    computer_board = Board(game_board_size)
+    computer_board.build_board()
+    computer_board.place_random_ships()
+    computer_board.construct_print_board()
+    return player_board, computer_board, game_board_size
 
 
 def new_round(player_board, computer_board, board_size):
